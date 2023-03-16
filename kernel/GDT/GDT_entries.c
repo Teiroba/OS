@@ -126,6 +126,17 @@ void gdt_init(void)
     asm volatile("lgdtl (%0)" : : "r" (&gdp));
 
     //This should load the full GDT in the register
+
+    // Reload all the segment registers
+    asm volatile("movw $0x10, %ax\n"
+                 "movw %ax, %ds\n"
+                 "movw %ax, %es\n"
+                 "movw %ax, %fs\n"
+                 "movw %ax, %gs\n"
+                 "movw %ax, %ss\n"
+                 "ljmp $0x08, $next\n"
+                 "next:\n");
+
     
 }
 
