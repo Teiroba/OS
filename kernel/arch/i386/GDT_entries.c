@@ -2,6 +2,7 @@
  
 #include <stdio.h>
 #include <stdint.h>
+#include <kernel/GDT_entries.h>
  
 // Each define here is for a specific flag in the descriptor.
 // Refer to the intel documentation for a description of what each one does.
