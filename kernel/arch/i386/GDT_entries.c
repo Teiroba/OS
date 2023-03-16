@@ -70,27 +70,27 @@ void create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
     printf("0x%.16llX\n", descriptor);
 }
  
-void encodeGdtEntry(uint8_t *target, uint32_t base, uint32_t limit, uint16_t flag)
+void encodeGdtEntry(uint8_t target, uint32_t base, uint32_t limit, uint16_t flag)
 {
     // Check the limit to make sure that it can be encoded
     //if (limit > 0xFFFFF) {kerror("GDT cannot encode limits larger than 0xFFFFF");}
  
     // Encode the limit
-    target[0] = limit & 0xFF;
-    target[1] = (limit >> 8) & 0xFF;
-    target[6] = (limit >> 16) & 0x0F;
+    gdt[target].entry0 = limit & 0xFF;
+    gdt[target].entry1 = (limit >> 8) & 0xFF;
+    gdt[target].entry6 = (limit >> 16) & 0x0F;
  
     // Encode the base
-    target[2] = base & 0xFF;
-    target[3] = (base >> 8) & 0xFF;
-    target[4] = (base >> 16) & 0xFF;
-    target[7] = (base >> 24) & 0xFF;
+    gdt[target].entry2 = base & 0xFF;
+    gdt[target].entry3 = (base >> 8) & 0xFF;
+    gdt[target].entry4 = (base >> 16) & 0xFF;
+    gdt[target].entry7 = (base >> 24) & 0xFF;
  
     // Encode the access byte
-    target[5] = flag & 0xFF;
+    gdt[target].entry5 = flag & 0xFF;
  
     // Encode the flags
-    target[6] |= (flag >> 8) & 0xF0;
+    gdt[target].entry6 |= (flag >> 8) & 0xF0;
 }
 
 void gdt_init(void)
@@ -99,42 +99,39 @@ void gdt_init(void)
     gp.limit = (sizeof(gdt) - 1);
     gp.base = (uint32_t)&gdt;
 
-    // target for encoding
-    uint8_t *target = (uint8_t *)gdp.base;
     // Null descriptor
-    encodeGdtEntry(target, 0, 0, 0);
-    target += 8;
+    encodeGdtEntry(0, 0, 0, 0);
  
     // Kernel code segment
-    encodeGdtEntry(target, 0, 0x000FFFFF, GDT_CODE_PL0);
-    target += 8;
+    encodeGdtEntry(1, 0, 0x000FFFFF, GDT_CODE_PL0);
  
     // Kernel data segment
-    encodeGdtEntry(target, 0, 0x000FFFFF, GDT_DATA_PL0);
-    target += 8;
+    encodeGdtEntry(2, 0, 0x000FFFFF, GDT_DATA_PL0);
  
     // User code segment
-    encodeGdtEntry(target, 0, 0x000FFFFF, GDT_CODE_PL3);
-    target += 8;
+    encodeGdtEntry(3, 0, 0x000FFFFF, GDT_CODE_PL3);
  
     // User data segment
-    encodeGdtEntry(target, 0, 0x000FFFFF, GDT_DATA_PL3);
-    target += 8;
-
+    encodeGdtEntry(4, 0, 0x000FFFFF, GDT_DATA_PL3);
     // Load the new GDT
     asm volatile("lgdtl (%0)" : : "r" (&gp));
 
     //This should load the full GDT in the register
 
-    // Reload all the segment registers
-    asm volatile("movw $0x10, %ax\n"
-                 "movw %ax, %ds\n"
-                 "movw %ax, %es\n"
-                 "movw %ax, %fs\n"
-                 "movw %ax, %gs\n"
-                 "movw %ax, %ss\n"
-                 "ljmp $0x08, $next\n"
-                 "next:\n");
+    // Reload all the segment registers. Doesn't work
+    /*asm volatile(
+
+                "mov $0x10, %ax;"
+                "mov %ax, %ds;"
+                "mov %ax, %es;"
+                "mov %ax, %fs;"
+                "mov %ax, %gs;"
+                "mov %ax, %ss;"
+                "jmp $0x08, $next;"
+                "next:"
+);*/
+
+                
 
     
 }

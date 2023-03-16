@@ -7,17 +7,24 @@
 // The GDT entry structure
 struct gdt_entry
 {
-  uint64_t
-} __attribute__((packed));
+    uint8_t entry0;
+    uint8_t entry1;
+    uint8_t entry2;
+    uint8_t entry3;
+    uint8_t entry4;
+    uint8_t entry5;
+    uint8_t entry6;
+    uint8_t entry7;
+
+};
 
 // The GDT pointer structure
-struct gdt_ptr
+struct gdp
 {
-  uint16_t limit;
+  uint32_t limit;
   uint32_t base;
-} __attribute__((packed));
-
+};
 void gdt_init(void);
-void encodeGdtEntry(uint8_t *target, uint32_t base, uint32_t limit, uint16_t flag);
+void encodeGdtEntry(uint8_t target, uint32_t base, uint32_t limit, uint16_t flag);
 
 #endif

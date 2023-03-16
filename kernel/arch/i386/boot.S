@@ -50,7 +50,7 @@ _start:
 	call _init
 
 	call kernel_early_main
-
+	
 
 	
 
