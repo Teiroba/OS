@@ -46,6 +46,10 @@
                      SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
                      SEG_PRIV(3)     | SEG_DATA_RDWR
  
+struct uint64_t gdt[5]
+struct gdp
+
+
 void
 create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
 {
@@ -63,7 +67,7 @@ create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
     // Create the low 32 bit segment
     descriptor |= base  << 16;                       // set base bits 15:0
     descriptor |= limit  & 0x0000FFFF;               // set limit bits 15:0
- 
+
     printf("0x%.16llX\n", descriptor);
 }
  
@@ -90,7 +94,43 @@ void encodeGdtEntry(uint8_t *target, uint32_t base, uint32_t limit, uint16_t fla
     target[6] |= (flag >> 8) & 0xF0;
 }
 
-int
+void gdt_init(void)
+{
+    //Pointer to the GDT (GDT descriptor)
+    gdp.limit = (sizeof(gdt) - 1);
+    gdp.base = (uint32_t)&gdt;
+
+    // target for encoding
+    target = (uint8_t *)gdp.base;
+    // Null descriptor
+    encodeGdtEntry(target, 0, 0, 0);
+    target += 8;
+ 
+    // Kernel code segment
+    encodeGdtEntry(target, 0, 0x000FFFFF, GDT_CODE_PL0);
+    target += 8;
+ 
+    // Kernel data segment
+    encodeGdtEntry(target, 0, 0x000FFFFF, GDT_DATA_PL0);
+    target += 8;
+ 
+    // User code segment
+    encodeGdtEntry(target, 0, 0x000FFFFF, GDT_CODE_PL3);
+    target += 8;
+ 
+    // User data segment
+    encodeGdtEntry(target, 0, 0x000FFFFF, GDT_DATA_PL3);
+    target += 8;
+
+    // Load the new GDT
+    asm volatile("lgdtl (%0)" : : "r" (&gdp));
+
+    //This should load the full GDT in the register
+    
+}
+
+
+/*int
 main(void)
 {
     // Compute the null descriptor, kernel mode code/data segments, and user mode code/data segments
@@ -102,4 +142,4 @@ main(void)
  
     return 0;
     // TODO : Actually create them instead of just computing them
-}
+}*/
