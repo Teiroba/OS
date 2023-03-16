@@ -46,13 +46,11 @@
 #define GDT_DATA_PL3 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
                      SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
                      SEG_PRIV(3)     | SEG_DATA_RDWR
- 
-struct uint64_t gdt[5]
-struct gdp
+struct gdt_entry gdt[5];
+struct gdp gp;
 
 
-void
-create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
+void create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
 {
     uint64_t descriptor;
  
@@ -72,7 +70,7 @@ create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
     printf("0x%.16llX\n", descriptor);
 }
  
-void encode_gdt_entry(uint8_t *target, uint32_t base, uint32_t limit, uint16_t flag)
+void encodeGdtEntry(uint8_t *target, uint32_t base, uint32_t limit, uint16_t flag)
 {
     // Check the limit to make sure that it can be encoded
     //if (limit > 0xFFFFF) {kerror("GDT cannot encode limits larger than 0xFFFFF");}
@@ -98,11 +96,11 @@ void encode_gdt_entry(uint8_t *target, uint32_t base, uint32_t limit, uint16_t f
 void gdt_init(void)
 {
     //Pointer to the GDT (GDT descriptor)
-    gdp.limit = (sizeof(gdt) - 1);
-    gdp.base = (uint32_t)&gdt;
+    gp.limit = (sizeof(gdt) - 1);
+    gp.base = (uint32_t)&gdt;
 
     // target for encoding
-    target = (uint8_t *)gdp.base;
+    uint8_t *target = (uint8_t *)gdp.base;
     // Null descriptor
     encodeGdtEntry(target, 0, 0, 0);
     target += 8;
@@ -124,7 +122,7 @@ void gdt_init(void)
     target += 8;
 
     // Load the new GDT
-    asm volatile("lgdtl (%0)" : : "r" (&gdp));
+    asm volatile("lgdtl (%0)" : : "r" (&gp));
 
     //This should load the full GDT in the register
 
