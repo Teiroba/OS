@@ -51,11 +51,13 @@ _start:
 
 	call gdt_init
 	reloadSegments:
-   		; Reload CS register containing code selector:
-   		JMP   0x08:.reload_CS ; 0x08 is the code segment selector (second element of the GDT)
+   		# Reload CS register containing code selector:
+   		JMP   0x08:.reload_CS 
+		# 0x08 is the code segment selector (second element of the GDT)
 	.reload_CS:
-  	; Reload data segment registers:
-   		MOV   AX, 0x10 ; 0x10 is the data segment selector (third element of the GDT)
+  	# Reload data segment registers:
+   		MOV   AX, 0x10 
+		# 0x10 is the data segment selector (third element of the GDT)
   		MOV   DS, AX
   	 	MOV   ES, AX
   	 	MOV   FS, AX
