@@ -4,7 +4,7 @@
 #include <kernel/GDT_entries.h>
 
 void kernel_early_main(void){
-	GDT_init()
+	gdt_init();
 }
 
 

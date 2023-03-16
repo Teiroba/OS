@@ -72,7 +72,7 @@ create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
     printf("0x%.16llX\n", descriptor);
 }
  
-void encodeGdtEntry(uint8_t *target, uint32_t base, uint32_t limit, uint16_t flag)
+void encode_gdt_entry(uint8_t *target, uint32_t base, uint32_t limit, uint16_t flag)
 {
     // Check the limit to make sure that it can be encoded
     //if (limit > 0xFFFFF) {kerror("GDT cannot encode limits larger than 0xFFFFF");}
