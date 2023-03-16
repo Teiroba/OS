@@ -49,7 +49,7 @@ _start:
 	# Call the global constructors.
 	call _init
 
-	call gdt_init
+	call kernel_early_main
 
 
 	
