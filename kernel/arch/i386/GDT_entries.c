@@ -135,18 +135,3 @@ void gdt_init(void)
 
     
 }
-
-
-/*int
-main(void)
-{
-    // Compute the null descriptor, kernel mode code/data segments, and user mode code/data segments
-    create_descriptor(0, 0, 0);
-    create_descriptor(0, 0x000FFFFF, (GDT_CODE_PL0));
-    create_descriptor(0, 0x000FFFFF, (GDT_DATA_PL0));
-    create_descriptor(0, 0x000FFFFF, (GDT_CODE_PL3));
-    create_descriptor(0, 0x000FFFFF, (GDT_DATA_PL3));
- 
-    return 0;
-    // TODO : Actually create them instead of just computing them
-}*/

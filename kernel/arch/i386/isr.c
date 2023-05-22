@@ -1,4 +1,9 @@
-__attribute__((noreturn))
+#include <stdio.h>
+#include <stdint.h>
+#include <kernel/isr.h>
+#include <kernel/tty.h>
+
+_attribute__((noreturn))
 void exception_handler(void);
 void exception_handler() {
     printf("Exception!\n");

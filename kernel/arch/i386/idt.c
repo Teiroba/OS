@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <kernel/idt.h>
+
 __attribute__((aligned(0x10))) 
 static idt_entry_t idt[256]; // Create an array of IDT entries; aligned for performance, with up to 256 entries
 
