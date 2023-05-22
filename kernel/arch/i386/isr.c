@@ -4,7 +4,7 @@
 #include <kernel/tty.h>
 #include <stdbool.h>
 
-_attribute__((noreturn))
+__attribute__((noreturn))
 void exception_handler(void);
 void exception_handler() {
     printf("Exception!\n");

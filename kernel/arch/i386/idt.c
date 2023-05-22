@@ -10,6 +10,9 @@ static idt_entry_t idt[IDT_MAX_DESCRIPTORS]; // Create an array of IDT entries; 
 
 static idtr_t idtr; // Create an IDTR
 
+static bool vectors[IDT_MAX_DESCRIPTORS]; // Create an array of booleans to keep track of which vectors are in use
+
+
 void idt_set_descriptor(uint8_t vector, void* isr, uint8_t flags);
 void idt_set_descriptor(uint8_t vector, void* isr, uint8_t flags) {
     idt_entry_t* descriptor = &idt[vector];
