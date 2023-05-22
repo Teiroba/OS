@@ -119,7 +119,17 @@ void gdt_init(void)
     //This should load the full GDT in the register
 
     // Reload all the segment registers. Doesn't work
-    asm volatile("call reloadSegments");
+    /*asm volatile(
+
+                "mov $0x10, %ax;"
+                "mov %ax, %ds;"
+                "mov %ax, %es;"
+                "mov %ax, %fs;"
+                "mov %ax, %gs;"
+                "mov %ax, %ss;"
+                "jmp $0x08, $next;"
+                "next:"
+);*/
 
                 
 
