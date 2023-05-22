@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <kernel/tty.h>
+#include <stdbool.h>
 
 void exception_handler(void);
 #endif

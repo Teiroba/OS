@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <kernel/isr.h>
 #include <kernel/tty.h>
+#include <stdbool.h>
 
 _attribute__((noreturn))
 void exception_handler(void);

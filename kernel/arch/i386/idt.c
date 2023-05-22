@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <kernel/idt.h>
+#include <stdbool.h>
+
+#define IDT_MAX_DESCRIPTORS 256 
 
 __attribute__((aligned(0x10))) 
-static idt_entry_t idt[256]; // Create an array of IDT entries; aligned for performance, with up to 256 entries
+static idt_entry_t idt[IDT_MAX_DESCRIPTORS]; // Create an array of IDT entries; aligned for performance
 
 static idtr_t idtr; // Create an IDTR
 
@@ -23,7 +26,7 @@ extern void* isr_stub_table[];
 void idt_init(void);
 void idt_init() {
     idtr.base = (uintptr_t)&idt[0];
-    idtr.limit = (uint16_t)sizeof(idt_desc_t) * IDT_MAX_DESCRIPTORS - 1;
+    idtr.limit = (uint16_t)sizeof(idt_entry_t) * IDT_MAX_DESCRIPTORS - 1;
  
     for (uint8_t vector = 0; vector < 32; vector++) {
         idt_set_descriptor(vector, isr_stub_table[vector], 0x8E);
