@@ -19,6 +19,8 @@ stack_bottom:
 .skip 16384 # 16 KiB
 stack_top:
 
+
+
 # The kernel entry point.
 .section .text
 .global _start
@@ -46,6 +48,17 @@ _start:
 
 	# Call the global constructors.
 	call _init
+
+	call kernel_early_main
+	
+
+	
+
+	
+
+	
+
+
 
 	/*
 	This is a good place to initialize crucial processor state before the
