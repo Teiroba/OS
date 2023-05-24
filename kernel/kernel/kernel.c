@@ -5,11 +5,14 @@
 #include <kernel/GDT_entries.h>
 #include <kernel/idt.h>
 #include <kernel/isr.h>
+#include <kernel/irq.h>
 
 void kernel_early_main(void){
 	gdt_init();
 	idt_init();
 	set_isrs();
+	irq_install();
+	__asm__ __volatile__ ("sti");
 }
 
 
