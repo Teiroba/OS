@@ -13,21 +13,19 @@ struct idtr_t idtp; // Create an IDTR
 extern void idt_load(); // Load the IDTR
 
 void idt_set_descriptor(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
-    idt_entry_t* descriptor = &idt[num];
- 
-    descriptor->isr_low        = base & 0xFFFF;
-    descriptor->kernel_cs      = sel;
-    descriptor->attributes     = flags;
-    descriptor->isr_high       = base >> 16;
-    descriptor->reserved       = 0;
+    idt[num].isr_low        = base & 0xFFFF;
+    idt[num].kernel_cs      = sel;
+    idt[num].attributes     = flags;
+    idt[num].isr_high       = base >> 16;
+    idt[num].reserved       = 0;
 }
 
 void idt_init(void);
 void idt_init() {
     idtp.base = (uintptr_t)&idt[0];
-    idtp.limit = (uint16_t)sizeof(idt_entry_t) * IDT_MAX_DESCRIPTORS - 1;
+    idtp.limit = (uint16_t)sizeof(struct idt_entry_t) * IDT_MAX_DESCRIPTORS - 1;
  
-    memset(&idt, 0, sizeof(idt_entry_t) * 256); //clear IDT memory
+    memset(&idt, 0, sizeof(struct idt_entry_t) * 256); //clear IDT memory
 
     idt_load(); // load the IDT
 }
