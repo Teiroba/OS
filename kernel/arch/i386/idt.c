@@ -9,7 +9,7 @@
 __attribute__((aligned(0x10))) 
 static idt_entry_t idt[IDT_MAX_DESCRIPTORS]; // Create an array of IDT entries; aligned for performance
 
-static idtr_t idtr; // Create an IDTR
+static idtr_t idtp; // Create an IDTR
 extern void idt_load(); // Load the IDTR
 
 void idt_set_descriptor(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
@@ -24,10 +24,10 @@ void idt_set_descriptor(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
 
 void idt_init(void);
 void idt_init() {
-    idtr.base = (uintptr_t)&idt[0];
-    idtr.limit = (uint16_t)sizeof(idt_entry_t) * IDT_MAX_DESCRIPTORS - 1;
+    idtp.base = (uintptr_t)&idt[0];
+    idtp.limit = (uint16_t)sizeof(idt_entry_t) * IDT_MAX_DESCRIPTORS - 1;
  
-    memset(&idt, 0, sizeof(struct idt_entry_t) * 256); //clear IDT memory
+    memset(&idt, 0, sizeof(idt_entry_t) * 256); //clear IDT memory
 
     idt_load(); // load the IDT
 }
