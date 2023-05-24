@@ -6,12 +6,14 @@
 #include <kernel/idt.h>
 #include <kernel/isr.h>
 #include <kernel/irq.h>
+#include <kernel/timer.h>
 
 void kernel_early_main(void){
 	gdt_init();
 	idt_init();
 	set_isrs();
 	irq_install();
+	timer_install();
 	__asm__ __volatile__ ("sti");
 }
 
