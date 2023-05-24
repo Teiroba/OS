@@ -66,7 +66,7 @@ void keyboard_handler(struct regs *r)
     else
     {
         /* Here, a key was just pressed.*/
-        printf("%c", kbdus[scancode]);
+        printf("%c", keymap[scancode]);
     }
 }
 
