@@ -1,7 +1,7 @@
-global _gdt_flush     
-extern _gp            
-_gdt_flush:
-    lgdt [_gp]        ; Load the GDT
+global gdt_flush     
+extern gp            
+gdt_flush:
+    lgdt [gp]        ; Load the GDT
     mov ax, 0x10      ; 0x10 is the offset in the GDT to our data segment
     mov ds, ax
     mov es, ax

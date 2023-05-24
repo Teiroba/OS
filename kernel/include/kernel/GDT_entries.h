@@ -14,14 +14,14 @@ struct gdt_entry
     unsigned char  granularity;
     unsigned char  base_high;           // The last 8 bits of the base.
 
-}; __attribute__((packed));
+} __attribute__((packed));
 
 // The GDT pointer structure
 struct gdp
 {
   unsigned short limit;
   unsigned int base;
-}; __attribute__((packed));
+} __attribute__((packed));
 void gdt_init(void);
 void encodeGdtEntry(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
 

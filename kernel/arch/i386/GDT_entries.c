@@ -74,13 +74,13 @@ void gdt_init(void)
     gp.base = &gdt;
 
     /* Our NULL descriptor */
-    gdt_set_gate(0, 0, 0, 0, 0);
+    encodeGdtEntry(0, 0, 0, 0, 0);
 
     // Code Segment.
-    gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
+    encodeGdtEntry(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
 
     // Data Segment.
-    gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+    encodeGdtEntry(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
     /* Reload the segment registers */
     gdt_flush(); 
