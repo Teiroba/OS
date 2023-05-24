@@ -13,7 +13,7 @@ void kernel_early_main(void){
 
 void kernel_main(void) {
 	terminal_initialize();
-	printf("Hello, kernel World!\nThis is a test\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	printf("Hello, kernel World!\nThis is a test\n");
 	printf("Testing %s %s %cnd again.\n", "again", "and again", 'a');
 	for(;;);
 }

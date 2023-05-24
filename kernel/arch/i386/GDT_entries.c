@@ -46,92 +46,42 @@
 #define GDT_DATA_PL3 SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | \
                      SEG_LONG(0)     | SEG_SIZE(1) | SEG_GRAN(1) | \
                      SEG_PRIV(3)     | SEG_DATA_RDWR
-struct gdt_entry gdt[5];
+struct gdt_entry gdt[3];
 struct gdp gp;
+extern void gdt_flush();
 
-
-void create_descriptor(uint32_t base, uint32_t limit, uint16_t flag)
+/* Setup a descriptor in the Global Descriptor Table */
+void encodeGdtEntry(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran)
 {
-    uint64_t descriptor;
- 
-    // Create the high 32 bit segment
-    descriptor  =  limit       & 0x000F0000;         // set limit bits 19:16
-    descriptor |= (flag <<  8) & 0x00F0FF00;         // set type, p, dpl, s, g, d/b, l and avl fields
-    descriptor |= (base >> 16) & 0x000000FF;         // set base bits 23:16
-    descriptor |=  base        & 0xFF000000;         // set base bits 31:24
- 
-    // Shift by 32 to allow for low part of segment
-    descriptor <<= 32;
- 
-    // Create the low 32 bit segment
-    descriptor |= base  << 16;                       // set base bits 15:0
-    descriptor |= limit  & 0x0000FFFF;               // set limit bits 15:0
+    /* Setup the descriptor base address */
+    gdt[num].base_low = (base & 0xFFFF);
+    gdt[num].base_middle = (base >> 16) & 0xFF;
+    gdt[num].base_high = (base >> 24) & 0xFF;
 
-    printf("0x%.16llX\n", descriptor);
-}
- 
-void encodeGdtEntry(uint8_t target, uint32_t base, uint32_t limit, uint16_t flag)
-{
-    // Check the limit to make sure that it can be encoded
-    //if (limit > 0xFFFFF) {kerror("GDT cannot encode limits larger than 0xFFFFF");}
- 
-    // Encode the limit
-    gdt[target].entry0 = limit & 0xFF;
-    gdt[target].entry1 = (limit >> 8) & 0xFF;
-    gdt[target].entry6 = (limit >> 16) & 0x0F;
- 
-    // Encode the base
-    gdt[target].entry2 = base & 0xFF;
-    gdt[target].entry3 = (base >> 8) & 0xFF;
-    gdt[target].entry4 = (base >> 16) & 0xFF;
-    gdt[target].entry7 = (base >> 24) & 0xFF;
- 
-    // Encode the access byte
-    gdt[target].entry5 = flag & 0xFF;
- 
-    // Encode the flags
-    gdt[target].entry6 |= (flag >> 8) & 0xF0;
+    /* Setup the descriptor limits */
+    gdt[num].limit_low = (limit & 0xFFFF);
+    gdt[num].granularity = ((limit >> 16) & 0x0F);
+
+    /* Finally, set up the granularity and access flags */
+    gdt[num].granularity |= (gran & 0xF0);
+    gdt[num].access = access;
 }
 
 void gdt_init(void)
 {
-    //Pointer to the GDT (GDT descriptor)
-    gp.limit = (sizeof(gdt) - 1);
-    gp.base = (uint32_t)&gdt;
+    /* Setup the GDT pointer and limit */
+    gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
+    gp.base = &gdt;
 
-    // Null descriptor
-    encodeGdtEntry(0, 0, 0, 0);
- 
-    // Kernel code segment
-    encodeGdtEntry(1, 0, 0x000FFFFF, GDT_CODE_PL0);
- 
-    // Kernel data segment
-    encodeGdtEntry(2, 0, 0x000FFFFF, GDT_DATA_PL0);
- 
-    // User code segment
-    encodeGdtEntry(3, 0, 0x000FFFFF, GDT_CODE_PL3);
- 
-    // User data segment
-    encodeGdtEntry(4, 0, 0x000FFFFF, GDT_DATA_PL3);
-    // Load the new GDT
-    asm volatile("lgdtl (%0)" : : "r" (&gp));
+    /* Our NULL descriptor */
+    gdt_set_gate(0, 0, 0, 0, 0);
 
-    //This should load the full GDT in the register
+    // Code Segment.
+    gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
 
-    // Reload all the segment registers. Doesn't work
-    /*asm volatile(
+    // Data Segment.
+    gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
-                "mov $0x10, %ax;"
-                "mov %ax, %ds;"
-                "mov %ax, %es;"
-                "mov %ax, %fs;"
-                "mov %ax, %gs;"
-                "mov %ax, %ss;"
-                "jmp $0x08, $next;"
-                "next:"
-);*/
-
-                
-
-    
+    /* Reload the segment registers */
+    gdt_flush(); 
 }

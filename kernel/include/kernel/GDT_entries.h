@@ -7,24 +7,22 @@
 // The GDT entry structure
 struct gdt_entry
 {
-    uint8_t entry0;
-    uint8_t entry1;
-    uint8_t entry2;
-    uint8_t entry3;
-    uint8_t entry4;
-    uint8_t entry5;
-    uint8_t entry6;
-    uint8_t entry7;
+    unsigned short limit_low;           // The lower 16 bits of the limit.
+    unsigned short base_low;            // The lower 16 bits of the base.
+    unsigned char  base_middle;         // The next 8 bits of the base.
+    unsigned char  access;              // Access flags, determine what ring this segment can be used in.
+    unsigned char  granularity;
+    unsigned char  base_high;           // The last 8 bits of the base.
 
-};
+}; __attribute__((packed));
 
 // The GDT pointer structure
 struct gdp
 {
-  uint32_t limit;
-  uint32_t base;
-};
+  unsigned short limit;
+  unsigned int base;
+}; __attribute__((packed));
 void gdt_init(void);
-void encodeGdtEntry(uint8_t target, uint32_t base, uint32_t limit, uint16_t flag);
+void encodeGdtEntry(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
 
 #endif
