@@ -15,8 +15,6 @@ static bool print(const char* data, size_t length) {
 int printf(const char* restrict format, ...) {
 	va_list parameters;
 	va_start(parameters, format);
-	//If there are not enough parameters, behavior is undefined
-	//Raise an error instead ?
 	int written = 0;
 
 	while (*format != '\0') {
