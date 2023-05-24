@@ -4,23 +4,24 @@
 #include <stdbool.h>
 #include <string.h>
 #include <kernel/irq.h>
+#include <kernel/isr.h>
 
-extern void irq0();
-extern void irq1();
-extern void irq2();
-extern void irq3();
-extern void irq4();
-extern void irq5();
-extern void irq6();
-extern void irq7();
-extern void irq8();
-extern void irq9();
-extern void irq10();
-extern void irq11();
-extern void irq12();
-extern void irq13();
-extern void irq14();
-extern void irq15();
+extern void irq_0();
+extern void irq_1();
+extern void irq_2();
+extern void irq_3();
+extern void irq_4();
+extern void irq_5();
+extern void irq_6();
+extern void irq_7();
+extern void irq_8();
+extern void irq_9();
+extern void irq_10();
+extern void irq_11();
+extern void irq_12();
+extern void irq_13();
+extern void irq_14();
+extern void irq_15();
 
 void *irq_routines[16] = {
     0, 0, 0, 0, 0, 0, 0, 0, // 0-7
@@ -55,22 +56,22 @@ void irq_install()
 {
     irq_remap();
 
-    idt_set_gate(32, (uint32_t)irq0, 0x08, 0x8E);
-    idt_set_gate(33, (uint32_t)irq1, 0x08, 0x8E);
-    idt_set_gate(34, (uint32_t)irq2, 0x08, 0x8E);
-    idt_set_gate(35, (uint32_t)irq3, 0x08, 0x8E);
-    idt_set_gate(36, (uint32_t)irq4, 0x08, 0x8E);
-    idt_set_gate(37, (uint32_t)irq5, 0x08, 0x8E);
-    idt_set_gate(38, (uint32_t)irq6, 0x08, 0x8E);
-    idt_set_gate(39, (uint32_t)irq7, 0x08, 0x8E);
-    idt_set_gate(40, (uint32_t)irq8, 0x08, 0x8E);
-    idt_set_gate(41, (uint32_t)irq9, 0x08, 0x8E);
-    idt_set_gate(42, (uint32_t)irq10, 0x08, 0x8E);
-    idt_set_gate(43, (uint32_t)irq11, 0x08, 0x8E);
-    idt_set_gate(44, (uint32_t)irq12, 0x08, 0x8E);
-    idt_set_gate(45, (uint32_t)irq13, 0x08, 0x8E);
-    idt_set_gate(46, (uint32_t)irq14, 0x08, 0x8E);
-    idt_set_gate(47, (uint32_t)irq15, 0x08, 0x8E);
+    idt_set_descriptor(32, (uint32_t)irq_0, 0x08, 0x8E);
+    idt_set_descriptor(33, (uint32_t)irq_1, 0x08, 0x8E);
+    idt_set_descriptor(34, (uint32_t)irq_2, 0x08, 0x8E);
+    idt_set_descriptor(35, (uint32_t)irq_3, 0x08, 0x8E);
+    idt_set_descriptor(36, (uint32_t)irq_4, 0x08, 0x8E);
+    idt_set_descriptor(37, (uint32_t)irq_5, 0x08, 0x8E);
+    idt_set_descriptor(38, (uint32_t)irq_6, 0x08, 0x8E);
+    idt_set_descriptor(39, (uint32_t)irq_7, 0x08, 0x8E);
+    idt_set_descriptor(40, (uint32_t)irq_8, 0x08, 0x8E);
+    idt_set_descriptor(41, (uint32_t)irq_9, 0x08, 0x8E);
+    idt_set_descriptor(42, (uint32_t)irq_10, 0x08, 0x8E);
+    idt_set_descriptor(43, (uint32_t)irq_11, 0x08, 0x8E);
+    idt_set_descriptor(44, (uint32_t)irq_12, 0x08, 0x8E);
+    idt_set_descriptor(45, (uint32_t)irq_13, 0x08, 0x8E);
+    idt_set_descriptor(46, (uint32_t)irq_14, 0x08, 0x8E);
+    idt_set_descriptor(47, (uint32_t)irq_15, 0x08, 0x8E);
 }
 
 void irq_handler(struct regs *r)

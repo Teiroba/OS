@@ -72,8 +72,8 @@ _start:
 
 	# Transfer control to the main kernel. The stack must be 16-bit aligned (which it is right now).
 	call kernel_main
-	; mov $0, %eax
-	; div %eax # Divide by zero to trigger a fault.
+	# mov $0, %eax
+	# div %eax # Divide by zero to trigger a fault.
 
 
 	# Hang if kernel_main unexpectedly returns.
