@@ -13,8 +13,8 @@ void kernel_early_main(void){
 	idt_init();
 	set_isrs();
 	irq_install();
-	timer_install();
 	__asm__ __volatile__ ("sti");
+	timer_install();
 }
 
 
@@ -22,4 +22,5 @@ void kernel_main(void) {
 	terminal_initialize();
 	printf("Hello, kernel World!\nThis is a test\n");
 	printf("Testing %s %s %cnd again.\n", "again", "and again", 'a');
+	while(1);
 }

@@ -15,10 +15,12 @@ void timer_handler(struct regs *r)
 {
     timer_ticks++;
 
-    if (timer_ticks % 100 == 0)
+    //Testing if the clock works
+
+    /*if (timer_ticks % 100 == 0)
     {
         printf("One second has passed\n");
-    }
+    }*/
 }
 
 void timer_phase(int hz) //Updates the timer frequency
