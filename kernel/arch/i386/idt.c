@@ -7,9 +7,9 @@
 #define IDT_MAX_DESCRIPTORS 256 
 
 __attribute__((aligned(0x10))) 
-static idt_entry_t idt[IDT_MAX_DESCRIPTORS]; // Create an array of IDT entries; aligned for performance
+struct idt_entry_t idt[IDT_MAX_DESCRIPTORS]; // Create an array of IDT entries; aligned for performance
 
-static idtr_t idtp; // Create an IDTR
+struct idtr_t idtp; // Create an IDTR
 extern void idt_load(); // Load the IDTR
 
 void idt_set_descriptor(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
