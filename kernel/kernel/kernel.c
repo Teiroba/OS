@@ -7,6 +7,7 @@
 #include <kernel/isr.h>
 #include <kernel/irq.h>
 #include <kernel/timer.h>
+#include <kernel/keyboard.h>
 
 void kernel_early_main(void){
 	gdt_init();
@@ -15,6 +16,7 @@ void kernel_early_main(void){
 	irq_install();
 	__asm__ __volatile__ ("sti");
 	timer_install();
+	keyboard_install();
 }
 
 
