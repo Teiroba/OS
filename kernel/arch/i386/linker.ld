@@ -28,14 +28,18 @@ SECTIONS
 	/* Read-write data (initialized) */
 	.data BLOCK(4K) : ALIGN(4K)
 	{
+		_begin_data = .;
 		*(.data)
 	}
 
 	/* Read-write data (uninitialized) and stack */
 	.bss BLOCK(4K) : ALIGN(4K)
 	{
+		_begin_bss = .;
 		*(COMMON)
 		*(.bss)
+		_end = .;
+		_end_bss = .;
 	}
 
 	/* The compiler may produce other sections, put them in the proper place in
