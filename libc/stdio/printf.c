@@ -60,6 +60,65 @@ int printf(const char* restrict format, ...) {
 			if (!print(str, len))
 				return -1;
 			written += len;
+
+		} else if (*format == 'd' || *format == 'i') {
+			format++;
+
+			int n = va_arg(parameters, int);
+
+			if (n == 0) {
+				if (putchar('0') == EOF)
+					return -1;
+				written++;
+				maxrem--;
+				if (!maxrem) {
+					// TODO: Set errno to EOVERFLOW.
+					return -1;
+				}
+
+			} else if (n > 0) {
+				int pow_of_ten = 1;
+				while (pow_of_ten <= n / 10)
+					pow_of_ten *= 10;
+				for (; pow_of_ten > 0; pow_of_ten /= 10) {
+					char digit = '0' + (n / pow_of_ten);
+					if (putchar(digit) == EOF)
+						return -1;
+					written++;
+					maxrem--;
+					if (!maxrem) {
+						// TODO: Set errno to EOVERFLOW.
+						return -1;
+					}
+					n -= (n / pow_of_ten) * pow_of_ten;
+				}
+
+			} else {
+				if (putchar('-') == EOF)
+					return -1;
+				written++;
+				maxrem--;
+				if (!maxrem) {
+					// TODO: Set errno to EOVERFLOW.
+					return -1;
+				}
+				int pow_of_ten = -1;
+				while (pow_of_ten >= n / 10)
+					pow_of_ten *= 10;
+				for (; pow_of_ten < 0; pow_of_ten /= 10) {
+					char digit = '0' + (n / pow_of_ten);
+					if (putchar(digit) == EOF)
+						return -1;
+					written++;
+					maxrem--;
+					if (!maxrem) {
+						// TODO: Set errno to EOVERFLOW.
+						return -1;
+					}
+					n -= (n / pow_of_ten) * pow_of_ten;
+				}
+			}
+
 		} else {
 			format = format_begun_at;
 			size_t len = strlen(format);
