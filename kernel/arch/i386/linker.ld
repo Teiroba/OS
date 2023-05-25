@@ -38,7 +38,6 @@ SECTIONS
 		_begin_bss = .;
 		*(COMMON)
 		*(.bss)
-		_end = .;
 		_end_bss = .;
 	}
 
