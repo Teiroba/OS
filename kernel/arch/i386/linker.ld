@@ -38,7 +38,7 @@ SECTIONS
 		_begin_bss = .;
 		*(COMMON)
 		*(.bss)
-		_end_bss = .;
+		_end = .;
 	}
 
 	/* The compiler may produce other sections, put them in the proper place in
