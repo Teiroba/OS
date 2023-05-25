@@ -3,11 +3,13 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <kernel/GDT_entries.h>
+#include <string.h>
  
 struct gdt_entry gdt[6];
 struct gdp gp;
 extern void gdt_flush();
-
+extern void* _begin_data; 
+extern void* _begin_bss;
 /* Setup a descriptor in the Global Descriptor Table */
 void encodeGdtEntry(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran)
 {
