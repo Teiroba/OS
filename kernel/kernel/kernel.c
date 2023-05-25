@@ -22,6 +22,7 @@ void kernel_early_main(void){
 	__asm__ __volatile__ ("sti");
 	timer_install();
 	keyboard_install();
+	
 }
 
 
@@ -59,10 +60,9 @@ void kernel_main(void) {
 		printf("%d ", xs[i]);
 	}
 	printf("\n");
-
-	add_ring3_segments();
+	jump_usermode();
 
 	// while (1) {}
 
-	jump_usermode();
+
 }
