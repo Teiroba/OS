@@ -1,7 +1,7 @@
 #ifndef MALLOC_H
 #define MALLOC_H
 
-#include "sbrk.h"
+#include <kernel/sbrk.h>
 
 #include <stddef.h>
 #include <stdint.h>

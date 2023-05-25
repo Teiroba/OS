@@ -7,12 +7,32 @@
 #include <stdint.h>
 #include <kernel/GDT_entries.h>
 #include <string.h>
+
+// The GDT entry structure
+struct gdt_entry
+{
+    unsigned short limit_low;           // The lower 16 bits of the limit.
+    unsigned short base_low;            // The lower 16 bits of the base.
+    unsigned char  base_middle;         // The next 8 bits of the base.
+    unsigned char  access;              // Access flags, determine what ring this segment can be used in.
+    unsigned char  granularity;
+    unsigned char  base_high;           // The last 8 bits of the base.
+
+} __attribute__((packed));
+
+// The GDT pointer structure
+struct gdp
+{
+  unsigned short limit;
+  unsigned int base;
+} __attribute__((packed));
  
 struct gdt_entry gdt[6];
 struct gdp gp;
 extern void gdt_flush();
 extern void* _begin_data;
 extern void* _begin_bss;
+extern void flush_tss();
 /* Setup a descriptor in the Global Descriptor Table */
 void encodeGdtEntry(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran)
 {
@@ -98,6 +118,7 @@ void gdt_init(void)
 
     /* Reload the segment registers */
     gdt_flush(); 
+	flush_tss();
 }
 
 void set_kernel_stack(uint32_t stack) { // Used when an interrupt occurs

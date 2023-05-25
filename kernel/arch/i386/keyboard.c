@@ -6,6 +6,11 @@
 #include <kernel/irq.h>
 #include <kernel/isr.h>
 #include <kernel/keyboard.h>
+#include <kernel/filesystem.h>
+#include <kernel/tty.h>
+
+int buffer[256];
+int buffer_index = 0;
 
 
 unsigned char keymap[128] =
@@ -67,6 +72,22 @@ void keyboard_handler(struct regs *r)
     {
         /* Here, a key was just pressed.*/
         printf("%c", keymap[scancode]);
+        /*if (scancode == 28) {
+          if (buffer[buffer_index-1] == 31) {
+            if (terminal_buffer[buffer_index-2] == 65363)
+            {
+            list_children();
+            }
+          }
+          buffer_index = 0;
+          for (int i = 0; i < 256; i++) {
+            buffer[i] = 0x00;
+          }
+        }
+        else {
+          buffer[buffer_index] = scancode;
+          buffer_index++;
+        }*/
     }
 }
 
